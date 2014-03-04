@@ -1,0 +1,34 @@
+{
+  "name": "temptressjs",
+  "version": "0.0.0",
+  "description": "A template manager for nodejs",
+  "devDependencies": {
+    "mocha-istanbul": "^0.2.0",
+    "mocha-lcov-reporter": "0.0.1",
+    "chai": "^1.9.0",
+    "mocha": "^1.17.1",
+    "coveralls": "^2.8.0",
+    "istanbul": "^0.2.4"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "make test",
+    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --reporter=mocha-istanbul test/**/*.js",
+    "coveralls": "npm run-script coverage && ./node_modules/.bin/coveralls.js < coverage/lcov.info"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rebelhold/temptressjs.git"
+  },
+  "keywords": [
+    "template",
+    "manager",
+    "client"
+  ],
+  "author": "Michael Christenson II <michael@rebelhold.com>",
+  "license": "GPL-3.0+",
+  "bugs": {
+    "url": "https://github.com/rebelhold/temptressjs/issues"
+  },
+  "homepage": "https://github.com/rebelhold/temptressjs"
+}
