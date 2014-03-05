@@ -3,9 +3,22 @@ require('../test_helper');
 var path        = require('path'),
     fs          = require('fs');
 
+var TemptressJs = require('../../lib/index');
+
 describe('setup', function () {
-  it('returns a temptress object without params setup');
-  it('returns a temptress object with params setup');
+  it('returns a temptress object without params setup', function () {
+    var temptress = new TemptressJs();
+    assert(temptress.config);
+  });
+
+  it('returns a temptress object with params setup', function () {
+    var temptress   = new TemptressJs({
+      paths: {library: 'templates'}
+    });
+    assert(temptress.config);
+  });
+
+
   it('has a config');
   describe('config.env', function () {
     it('defaults to development');
