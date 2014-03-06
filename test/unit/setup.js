@@ -47,22 +47,41 @@ describe('setup', function () {
   });
 
   describe('config.paths', function () {
-    // it('sets a destination path', function(){
-    //   var first_temptress = new TemptressJs();
+    var temptress;
 
-    //   console.log(first_temptress.config['destination'] + "Hi");
+    before(function () {
+      temptress = new TemptressJs();
+    });
 
-    //   var temptress = new TemptressJs({
-    //     paths: {destination: 'Use the source Luke!'}
-    //   });
-    //   assert(temptress.config);
-    //   assert(temptress.config.paths);
-    //   assert.equal(temptress.config.paths.destination, 'Use the source Luke!');
-    // });
+    it('sets a destination path', function(){
+      assert(!temptress.config.paths.destination);
+      temptress.config.paths.destination = 'destination';
+      assert(temptress.config.paths.destination);
+      assert.equal('destination', temptress.config.paths.destination);
+    });
 
-    it('sets a library path');
-    it('sets a preview path');
+    it('sets a library path', function(){
+      // assert(!temptress.config.paths.library);
+      temptress.config.paths.library = 'library';
+      assert(temptress.config.paths.library);
+      assert.equal('library', temptress.config.paths.library);
+    });
+
+    it('sets a preview path', function(){
+      assert(!temptress.config.paths.preview);
+      temptress.config.paths.preview = 'preview';
+      assert(temptress.config.paths.preview);
+      assert.equal('preview', temptress.config.paths.preview);
+    });
+
+    it('sets an approved path', function(){
+      assert(!temptress.config.paths.approved);
+      temptress.config.paths.approved = 'approved';
+      assert(temptress.config.paths.approved);
+      assert.equal('approved', temptress.config.paths.approved);
+    });
   });
+
   describe('paths.create', function () {
     it('creates a destination path');
     it('creates a library path');
