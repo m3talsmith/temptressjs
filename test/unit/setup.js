@@ -18,7 +18,6 @@ describe('setup', function () {
     assert(temptress.config);
   });
 
-
   it('has a valid config', function () {
     var temptress = new TemptressJs({
       paths: {library: 'templates'}
@@ -30,10 +29,27 @@ describe('setup', function () {
 
   describe('config.env', function () {
     it('defaults to development');
-    it('sets to current environment');
+    it('sets to current environment', function(){
+      var temptress = new TemptressJs();
+      assert(temptress.config.env);
+      assert(temptress.config.env == 'test');
+    });
   });
+
   describe('config.paths', function () {
-    it('sets a destination path');
+    // it('sets a destination path', function(){
+    //   var first_temptress = new TemptressJs();
+
+    //   console.log(first_temptress.config['destination'] + "Hi");
+
+    //   var temptress = new TemptressJs({
+    //     paths: {destination: 'Use the source Luke!'}
+    //   });
+    //   assert(temptress.config);
+    //   assert(temptress.config.paths);
+    //   assert.equal(temptress.config.paths.destination, 'Use the source Luke!');
+    // });
+
     it('sets a library path');
     it('sets a preview path');
   });
