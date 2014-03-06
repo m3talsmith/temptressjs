@@ -28,9 +28,19 @@ describe('setup', function () {
   });
 
   describe('config.env', function () {
-    it('defaults to development');
-    it('sets to current environment', function(){
+    it('defaults to development', function () {
+      delete process.env['NODE_ENV'];
+
       var temptress = new TemptressJs();
+      process.env.NODE_ENV = 'test';
+
+      assert.equal('development', temptress.config.env);
+    });
+
+    it('sets to current environment', function(){
+      process.env.NODE_ENV = 'test';
+      var temptress = new TemptressJs();
+
       assert(temptress.config.env);
       assert(temptress.config.env == 'test');
     });

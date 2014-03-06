@@ -19,7 +19,7 @@
   },
   "main": "lib/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/gulp mocha",
+    "test": "./node_modules/.bin/gulp mocha"
   },
   "repository": {
     "type": "git",
