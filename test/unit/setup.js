@@ -12,14 +12,22 @@ describe('setup', function () {
   });
 
   it('returns a temptress object with params setup', function () {
-    var temptress   = new TemptressJs({
+    var temptress = new TemptressJs({
       paths: {library: 'templates'}
     });
     assert(temptress.config);
   });
 
 
-  it('has a config');
+  it('has a valid config', function () {
+    var temptress = new TemptressJs({
+      paths: {library: 'templates'}
+    });
+    assert(temptress.config);
+    assert(temptress.config.paths);
+    assert.equal(temptress.config.paths.library, 'templates');
+  });
+
   describe('config.env', function () {
     it('defaults to development');
     it('sets to current environment');
