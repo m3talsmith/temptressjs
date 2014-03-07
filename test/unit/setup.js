@@ -85,22 +85,58 @@ describe('setup', function () {
   });
 
   describe('paths.create', function () {
-    var temptress; 
+    var testPaths = path.join(__dirname, '../..', '.tmp', 'test');
 
     before(function(){
-      temptress = new TemptressJs();
+      fs.mkdirSync(testPaths);
+    });
+
+    after(function() {
+      fs.rmdirSync(testPaths);
     });
 
     it('creates a destination path', function (done) {
+      var temptress = new TemptressJs({
+        paths: {
+          destination: path.join(testPaths, 'destination')
+        }
+      });
       assert(!fs.existsSync(temptress.config.paths.destination));
       temptress.paths.create(function () {
-        assert(!fs.existsSync(temptress.config.paths.destination));
+        assert(fs.existsSync(temptress.config.paths.destination));
+        fs.rmdirSync(temptress.config.paths.destination);
         done();
       });
     });
 
-    it('creates a library path');
-    it('creates a preview path');
+    it('creates a library path', function(done){
+      var temptress = new TemptressJs({
+        paths: {
+          library: path.join(testPaths, 'library')
+        }
+      });
+      assert(!fs.existsSync(temptress.config.paths.library));
+      temptress.paths.create(function () {
+        assert(fs.existsSync(temptress.config.paths.library));
+        fs.rmdirSync(temptress.config.paths.library);
+        done();
+      });
+    });
+
+    it('creates a preview path', function(done){
+      var temptress = new TemptressJs({
+        paths: {
+          preview: path.join(testPaths, 'preview')
+        }
+      });
+      assert(!fs.existsSync(temptress.config.paths.preview));
+      temptress.paths.create(function () {
+        assert(fs.existsSync(temptress.config.paths.preview));
+        fs.rmdirSync(temptress.config.paths.preview);
+        console.log('preview tested');
+        done();
+      });
+    });
   });
 
   describe('library.clone', function () {
