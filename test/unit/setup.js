@@ -47,30 +47,102 @@ describe('setup', function () {
   });
 
   describe('config.paths', function () {
-    // it('sets a destination path', function(){
-    //   var first_temptress = new TemptressJs();
+    var temptress;
 
-    //   console.log(first_temptress.config['destination'] + "Hi");
+    before(function () {
+      temptress = new TemptressJs();
+    });
 
-    //   var temptress = new TemptressJs({
-    //     paths: {destination: 'Use the source Luke!'}
-    //   });
-    //   assert(temptress.config);
-    //   assert(temptress.config.paths);
-    //   assert.equal(temptress.config.paths.destination, 'Use the source Luke!');
-    // });
+    // Defining relevant variables to be initialized by TemplRun. 
+    // Boiler plate, but here to demonstrate primary functionality
+    it('sets a destination path', function(){
+      assert(!temptress.config.paths.destination);
+      temptress.config.paths.destination = 'destination';
+      assert(temptress.config.paths.destination);
+      assert.equal('destination', temptress.config.paths.destination);
+    });
 
-    it('sets a library path');
-    it('sets a preview path');
+    it('sets a library path', function(){
+      // assert(!temptress.config.paths.library);
+      temptress.config.paths.library = 'library';
+      assert(temptress.config.paths.library);
+      assert.equal('library', temptress.config.paths.library);
+    });
+
+    it('sets a preview path', function(){
+      assert(!temptress.config.paths.preview);
+      temptress.config.paths.preview = 'preview';
+      assert(temptress.config.paths.preview);
+      assert.equal('preview', temptress.config.paths.preview);
+    });
+
+    it('sets an approved path', function(){
+      assert(!temptress.config.paths.approved);
+      temptress.config.paths.approved = 'approved';
+      assert(temptress.config.paths.approved);
+      assert.equal('approved', temptress.config.paths.approved);
+    });
   });
+
   describe('paths.create', function () {
-    it('creates a destination path');
-    it('creates a library path');
-    it('creates a preview path');
+    var testPaths = path.join(__dirname, '../..', '.tmp', 'test');
+
+    before(function(){
+      fs.mkdirSync(testPaths);
+    });
+
+    after(function() {
+      fs.rmdirSync(testPaths);
+    });
+
+    it('creates a destination path', function (done) {
+      var temptress = new TemptressJs({
+        paths: {
+          destination: path.join(testPaths, 'destination')
+        }
+      });
+      assert(!fs.existsSync(temptress.config.paths.destination));
+      temptress.paths.create(function () {
+        assert(fs.existsSync(temptress.config.paths.destination));
+        fs.rmdirSync(temptress.config.paths.destination);
+        done();
+      });
+    });
+
+    it('creates a library path', function(done){
+      var temptress = new TemptressJs({
+        paths: {
+          library: path.join(testPaths, 'library')
+        }
+      });
+      assert(!fs.existsSync(temptress.config.paths.library));
+      temptress.paths.create(function () {
+        assert(fs.existsSync(temptress.config.paths.library));
+        fs.rmdirSync(temptress.config.paths.library);
+        done();
+      });
+    });
+
+    it('creates a preview path', function(done){
+      var temptress = new TemptressJs({
+        paths: {
+          preview: path.join(testPaths, 'preview')
+        }
+      });
+      assert(!fs.existsSync(temptress.config.paths.preview));
+      temptress.paths.create(function () {
+        assert(fs.existsSync(temptress.config.paths.preview));
+        fs.rmdirSync(temptress.config.paths.preview);
+        console.log('preview tested');
+        done();
+      });
+    });
   });
+
   describe('library.clone', function () {
     it('copies library templates to destination path');
   });
+
   describe('library.templates', function () {
     it('has templates with template objects');
     describe('template', function () {
