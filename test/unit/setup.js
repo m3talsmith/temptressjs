@@ -53,6 +53,8 @@ describe('setup', function () {
       temptress = new TemptressJs();
     });
 
+    // Defining relevant variables to be initialized by TemplRun. 
+    // Boiler plate, but here to demonstrate primary functionality
     it('sets a destination path', function(){
       assert(!temptress.config.paths.destination);
       temptress.config.paths.destination = 'destination';
@@ -83,13 +85,28 @@ describe('setup', function () {
   });
 
   describe('paths.create', function () {
-    it('creates a destination path');
+    var temptress; 
+
+    before(function(){
+      temptress = new TemptressJs();
+    });
+
+    it('creates a destination path', function (done) {
+      assert(!fs.existsSync(temptress.config.paths.destination));
+      temptress.paths.create(function () {
+        assert(!fs.existsSync(temptress.config.paths.destination));
+        done();
+      });
+    });
+
     it('creates a library path');
     it('creates a preview path');
   });
+
   describe('library.clone', function () {
     it('copies library templates to destination path');
   });
+
   describe('library.templates', function () {
     it('has templates with template objects');
     describe('template', function () {
