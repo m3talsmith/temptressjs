@@ -1,9 +1,9 @@
-require('../test_helper');
-
 var path        = require('path'),
     fs          = require('fs');
 
-var TemptressJs = require('../../lib/index');
+require(path.join('..', 'test_helper'));
+
+var TemptressJs = require(path.join('..', '..', 'lib', 'index'));
 
 describe('setup', function () {
   it('returns a temptress object without params setup', function () {
@@ -13,18 +13,18 @@ describe('setup', function () {
 
   it('returns a temptress object with params setup', function () {
     var temptress = new TemptressJs({
-      paths: {library: 'templates'}
+      paths: {templates: 'templates'}
     });
     assert(temptress.config);
   });
 
   it('has a valid config', function () {
     var temptress = new TemptressJs({
-      paths: {library: 'templates'}
+      paths: {templates: 'templates'}
     });
     assert(temptress.config);
     assert(temptress.config.paths);
-    assert.equal(temptress.config.paths.library, 'templates');
+    assert.equal(temptress.config.paths.templates, 'templates');
   });
 
   describe('config.env', function () {
@@ -49,12 +49,16 @@ describe('setup', function () {
   describe('config.paths', function () {
     var temptress;
 
-    before(function () {
+    beforeEach(function (done) {
       temptress = new TemptressJs();
+      done();
     });
 
-    // Defining relevant variables to be initialized by TemplRun. 
-    // Boiler plate, but here to demonstrate primary functionality
+    afterEach(function (done) {
+      temptress = {};
+      done();
+    });
+
     it('sets a destination path', function(){
       assert(!temptress.config.paths.destination);
       temptress.config.paths.destination = 'destination';
@@ -62,11 +66,11 @@ describe('setup', function () {
       assert.equal('destination', temptress.config.paths.destination);
     });
 
-    it('sets a library path', function(){
-      // assert(!temptress.config.paths.library);
-      temptress.config.paths.library = 'library';
-      assert(temptress.config.paths.library);
-      assert.equal('library', temptress.config.paths.library);
+    it('sets a templates path', function(){
+      assert.equal(undefined, temptress.config.paths.libraryTemplates);
+      temptress.config.paths.libraryTemplates = 'templates';
+      assert(temptress.config.paths.libraryTemplates);
+      assert.equal('templates', temptress.config.paths.libraryTemplates);
     });
 
     it('sets a preview path', function(){
@@ -85,11 +89,7 @@ describe('setup', function () {
   });
 
   describe('paths.create', function () {
-    var testPaths = path.join(__dirname, '../..', '.tmp', 'test');
-
-    before(function(){
-      fs.mkdirSync(testPaths);
-    });
+    var testPaths = path.join(__dirname, '..', '..', '.tmp', 'test');
 
     after(function() {
       fs.rmdirSync(testPaths);
@@ -101,7 +101,9 @@ describe('setup', function () {
           destination: path.join(testPaths, 'destination')
         }
       });
+
       assert(!fs.existsSync(temptress.config.paths.destination));
+
       temptress.paths.create(function () {
         assert(fs.existsSync(temptress.config.paths.destination));
         fs.rmdirSync(temptress.config.paths.destination);
@@ -115,7 +117,9 @@ describe('setup', function () {
           library: path.join(testPaths, 'library')
         }
       });
+
       assert(!fs.existsSync(temptress.config.paths.library));
+
       temptress.paths.create(function () {
         assert(fs.existsSync(temptress.config.paths.library));
         fs.rmdirSync(temptress.config.paths.library);
@@ -129,11 +133,12 @@ describe('setup', function () {
           preview: path.join(testPaths, 'preview')
         }
       });
+
       assert(!fs.existsSync(temptress.config.paths.preview));
+
       temptress.paths.create(function () {
         assert(fs.existsSync(temptress.config.paths.preview));
         fs.rmdirSync(temptress.config.paths.preview);
-        console.log('preview tested');
         done();
       });
     });
