@@ -145,7 +145,81 @@ describe('setup', function () {
   });
 
   describe('library.clone', function () {
-    it('copies library templates to destination path');
+    var temptress,
+        testPath = path.join(__dirname, '..', '..', '.tmp', 'test');
+
+    before(function () {
+      temptress = new TemptressJs({
+        paths: {
+          library: path.join(testPath, 'library'),
+          destination: path.join(testPath, 'templates')
+        }
+      });
+    });
+
+    after(function () {
+      fs.rmdirSync(testPath);
+    });
+
+    it('has a library', function () {
+      assert(temptress.library);
+    });
+
+    it('library has a path', function () {
+      assert.equal(
+        temptress.library.path,
+        temptress.config.paths.library
+      );
+    });
+
+    it('library has a destination', function () {
+      assert.equal(
+        temptress.library.destination,
+        temptress.config.paths.destination
+      );
+    });
+
+    it('library has a clone function', function () {
+      assert(temptress.library.clone, 'library.clone undefined');
+    });
+
+    it('creates missing directory structure', function (done) {
+      assert(!fs.existsSync(temptress.library.path), temptress.library.path + ' exists');
+      assert(!fs.existsSync(temptress.library.destination), temptress.library.destination + ' exists');
+
+      temptress.library.clone(function () {
+        assert.equal(fs.existsSync(temptress.library.path), true);
+        assert.equal(fs.existsSync(temptress.library.destination), true);
+  
+        fs.rmdirSync(temptress.library.path);
+        fs.rmdirSync(temptress.library.destination);
+        done();
+      });
+    });
+
+    it('clones library templates to destination', function (done) {
+      var testLibraryFile     = path.join(temptress.library.path, 'index.html'),
+          testDestinationFile = path.join(temptress.library.destination, 'index.html');
+
+      temptress.paths.create(function () {
+        var file = fs.openSync(testLibraryFile, 'w+');
+        fs.writeSync(file, '<html><head><title>Test Template</title></head><body><h1>Test Template</h1></body></html>');
+        fs.closeSync(file);
+
+        assert(fs.existsSync(testLibraryFile), testLibraryFile + ' does not exist');
+        assert(!fs.existsSync(testDestinationFile), testDestinationFile + ' exists');
+
+        temptress.library.clone(function () {
+          assert(fs.existsSync(testDestinationFile), testDestinationFile + ' does not exist');
+
+          fs.unlinkSync(testLibraryFile);
+          fs.unlinkSync(testDestinationFile);
+          fs.rmdirSync(temptress.library.path);
+          fs.rmdirSync(temptress.library.destination);
+          done();
+        });
+      });
+    });
   });
 
   describe('library.templates', function () {
