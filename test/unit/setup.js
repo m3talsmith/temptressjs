@@ -212,10 +212,78 @@ describe('setup', function () {
         temptress.library.clone(function () {
           assert(fs.existsSync(testDestinationFile), testDestinationFile + ' does not exist');
 
+          /* fs.unlinkSync deletes the file
+           * See: http://nodejs.org/api/fs.html#fs_fs_unlinksync_path
+           */
           fs.unlinkSync(testLibraryFile);
           fs.unlinkSync(testDestinationFile);
           fs.rmdirSync(temptress.library.path);
           fs.rmdirSync(temptress.library.destination);
+          done();
+        });
+      });
+    });
+
+    /* Because our templates are most likely going to have multiple
+     * directories with files in them, we need to test for that.
+     * The library structure we are testing is:
+     *
+     * - (File)      index.html
+     * - (Directory) css
+     *   - (File)      screen.css
+     * - (Directory) js
+     *   - (File)      application.js
+     */
+    it('clones deep library templates to destination', function (done) {
+      temptress.paths.create(function () {
+        var testCssPath      = path.join(temptress.library.path, 'css'),
+            testJsPath       = path.join(temptress.library.path, 'js'),
+            testHtmlFilePath = path.join(temptress.library.path, 'index.html'),
+            testCssFilePath  = path.join(temptress.library.path, 'css', 'style.css'),
+            testJsFilePath   = path.join(temptress.library.path, 'js', 'application.js');
+
+        var destinationCssPath      = path.join(temptress.library.destination, 'css'),
+            destinationJsPath       = path.join(temptress.library.destination, 'js'),
+            destinationHtmlFilePath = path.join(temptress.library.destination, 'index.html'),
+            destinationCssFilePath  = path.join(temptress.library.destination, 'css', 'style.css'),
+            destinationJsFilePath   = path.join(temptress.library.destination, 'js', 'application.js');
+
+        fs.mkdirSync(testCssPath);
+        fs.mkdirSync(testJsPath);
+
+        fs.writeFileSync(testHtmlFilePath, '<html><head><title>Test Template</title></head><body><h1>Test Template</h1></body></html>');
+        fs.writeFileSync(testCssFilePath, 'h1 {text-decoration: underline;}');
+        fs.writeFileSync(testJsFilePath, 'alert("blink");');
+
+
+        temptress.library.clone(function () {
+          assert(fs.existsSync(destinationCssPath), destinationCssPath + ' does not exist');
+          assert(fs.existsSync(destinationJsPath), destinationJsPath + ' does not exist');
+          assert(fs.existsSync(destinationHtmlFilePath), destinationHtmlFilePath + ' does not exist');
+          assert(fs.existsSync(destinationCssFilePath), destinationCssFilePath + ' does not exist');
+          assert(fs.existsSync(destinationJsFilePath), destinationJsFilePath + ' does not exist');
+
+          assert.equal(fs.readFileSync(testHtmlFilePath), fs.readFileSync(destinationHtmlFilePath));
+          assert.equal(fs.readFileSync(testCssFilePath), fs.readFileSync(destinationCssFilePath));
+          assert.equal(fs.readFileSync(testJsFilePath), fs.readFileSync(destinationJsFilePath));
+
+          fs.unlinkSync(testHtmlFilePath);
+          fs.unlinkSync(testCssFilePath);
+          fs.unlinkSync(testJsFilePath);
+
+          fs.unlinkSync(destinationHtmlFilePath);
+          fs.unlinkSync(destinationCssFilePath);
+          fs.unlinkSync(destinationJsFilePath);
+
+          fs.rmdirSync(testCssPath);
+          fs.rmdirSync(testJsPath);
+
+          fs.rmdirSync(destinationCssPath);
+          fs.rmdirSync(destinationJsPath);
+
+          fs.rmdirSync(temptress.library.path);
+          fs.rmdirSync(temptress.library.destination);
+
           done();
         });
       });
