@@ -101,11 +101,12 @@ describe('setup', function () {
           destination: path.join(testPaths, 'destination')
         }
       });
+      console.log(path.join(testPaths, 'destination'));
 
-      assert(!fs.existsSync(temptress.config.paths.destination));
+      assert.equal(false, fs.existsSync(temptress.config.paths.destination));
 
       temptress.paths.create(function () {
-        assert(fs.existsSync(temptress.config.paths.destination));
+        assert.equal(true, fs.existsSync(temptress.config.paths.destination));
         fs.rmdirSync(temptress.config.paths.destination);
         done();
       });
