@@ -101,11 +101,12 @@ describe('setup', function () {
           destination: path.join(testPaths, 'destination')
         }
       });
+      console.log(path.join(testPaths, 'destination'));
 
-      assert(!fs.existsSync(temptress.config.paths.destination));
+      assert.equal(false, fs.existsSync(temptress.config.paths.destination));
 
       temptress.paths.create(function () {
-        assert(fs.existsSync(temptress.config.paths.destination));
+        assert.equal(true, fs.existsSync(temptress.config.paths.destination));
         fs.rmdirSync(temptress.config.paths.destination);
         done();
       });
@@ -263,9 +264,20 @@ describe('setup', function () {
           assert(fs.existsSync(destinationCssFilePath), destinationCssFilePath + ' does not exist');
           assert(fs.existsSync(destinationJsFilePath), destinationJsFilePath + ' does not exist');
 
-          assert.equal(fs.readFileSync(testHtmlFilePath), fs.readFileSync(destinationHtmlFilePath));
-          assert.equal(fs.readFileSync(testCssFilePath), fs.readFileSync(destinationCssFilePath));
-          assert.equal(fs.readFileSync(testJsFilePath), fs.readFileSync(destinationJsFilePath));
+          assert.equal(
+            fs.readFileSync(testHtmlFilePath).toString(),
+            fs.readFileSync(destinationHtmlFilePath).toString()
+          );
+
+          assert.equal(
+            fs.readFileSync(testCssFilePath).toString(),
+            fs.readFileSync(destinationCssFilePath).toString()
+          );
+
+          assert.equal(
+            fs.readFileSync(testJsFilePath).toString(),
+            fs.readFileSync(destinationJsFilePath).toString()
+          );
 
           fs.unlinkSync(testHtmlFilePath);
           fs.unlinkSync(testCssFilePath);
