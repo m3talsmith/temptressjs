@@ -101,7 +101,6 @@ describe('setup', function () {
           destination: path.join(testPaths, 'destination')
         }
       });
-      console.log(path.join(testPaths, 'destination'));
 
       assert.equal(false, fs.existsSync(temptress.config.paths.destination));
 
